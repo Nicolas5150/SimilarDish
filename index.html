@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> Similar Dish </title>
+  <!--Import Google Icon Font-->
+  <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!--Import materialize.css-->
+  <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+  <link type="text/css" rel="stylesheet" href="css/style.css"  media="screen,projection"/>
+  <!--Let browser know website is optimized for mobile-->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<body>
+  <div class="slider">
+
+    <div class="fixed-action-btn">
+      <!--Fixed Modal Trigger -->
+      <a class="modal-trigger btn-floating btn-large waves-effect" href="#modal1">
+        <i class="large material-icons">note_add</i>
+      </a>
+    </div>
+    <ul class="slides">
+      <li>
+        <img src="img/food1.jpg">
+        <div class="caption center-align">
+          <h3>This is our big Tagline!</h3>
+          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+        </div>
+      </li>
+      <li>
+        <img src="img/food2.jpg">
+        <div class="caption left-align">
+          <h3>Left Aligned Caption</h3>
+          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+        </div>
+      </li>
+      <li>
+        <img src="img/food3.jpg">
+        <div class="caption right-align">
+          <h3>Right Aligned Caption</h3>
+          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+        </div>
+      </li>
+      <li>
+        <img src="img/food4.jpg">
+        <div class="caption center-align">
+          <h3>This is our big Tagline!</h3>
+          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- Bottom Two Halfed Sections -->
+  <div class="row center">
+    <div class="col s12 m12 l6" id="left_content">
+      <h5> <b>Dish Analysis</b> </h5>
+      <br>
+      <img class="responsive-img" src="img/clarifai.png" id="clarifi">
+      <img class="responsive-img" src="img/spoonacular.png">
+      <p class="p">
+        Using Clarifi to analyze your uploaded image, we obtain all the possible
+        ingredients in the provided sample. <br> Once done, we send it off to Spoonacular.
+      </p>
+    </div>
+    <div class="col s12 m12 l6" id="right_content">
+      <h5> <b>Similar Options</b> </h5>
+      <br>
+      <img class="responsive-img" src="img/icon.png">
+      <br><br>
+      <p class="p">
+        With all the possible ingredients now sent over, <br> we have spoonacular return
+        possible dishes based off those ingredients and present them to you.
+      </p>
+    </div>
+  </div>
+
+
+ <!-- Modal Structure -->
+ <!-- https://www.youtube.com/watch?v=Ipa9xAs_nTg -->
+ <div id="modal1" class="modal modal-fixed-footer">
+   <div class="modal-content">
+     <h4>Upload Image</h4>
+     <form id="img_form" method="post" action="#" enctype="multipart/form-data">
+       <input type="hidden" name="size" value="100000">
+       <div>
+         <input id="img_name" type="file" name="image">
+       </div>
+       <div class="modal-footer">
+         <input id="upload_img" class="modal-action modal-close waves-effect waves-green btn-flat"
+          type="submit" name="upload" value="Upload Image">
+       </div>
+     </form>
+   </div>
+ </div>
+
+  <!--Import jQuery before materialize.js-->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+  <script type="text/javascript" src="https://sdk.clarifai.com/js/clarifai-latest.js"></script>
+  <script type="text/javascript" src="js/materialize.min.js"></script>
+  <script type="text/javascript" src="js/dish.js"></script>
+</body>
+</html>
