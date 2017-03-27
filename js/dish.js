@@ -42,6 +42,8 @@ $(document).ready(function(){
       'CyuNGr-FgpOfkRbyvkvkwYBvc9nwjAo1FZ3m4cLu'
     );
 
+    // Food model.
+    // https://developer.clarifai.com/models/bd367be194cf45149e75f01d59f77ba7
     app.models.predict("bd367be194cf45149e75f01d59f77ba7", "https://samples.clarifai.com/food.jpg").then(
       function(response) {
         console.log(response);
