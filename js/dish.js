@@ -54,5 +54,10 @@ $(document).ready(function(){
     );
   }
 
+  $(".clickable").click(function() {
+    var name =  $(this).attr("id");
+    window.location = $(this).find("a").attr("href");
+    alert(name);
+  });
 
 });

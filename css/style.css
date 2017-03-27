@@ -1,8 +1,36 @@
+/* Element Tags */
 html, body {
   height: 100%;
   width: 100%;
 }
 
+h5 {
+  color: #2B2B2B;
+}
+
+/* Bottom Two Subsections */
+#clarifi {
+  margin-right: 10px
+}
+
+.p {
+  width: 72%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.row {
+  margin-bottom: 0;
+}
+
+#left_content {
+
+  background-color: rgba(226, 106, 106, .8);
+  background-color: #EEFFFF;
+}
+
+
+/* Results Section (card layout) */
 #results {
   border-top: 1px;
   border-style: solid;
@@ -18,57 +46,46 @@ html, body {
   background-color: #E26A6A;
   padding: 10px;
   width: 100%;
-  height: 25%;
+  height: 20%;
+}
+
+.cards:hover {
+  background-color: gray;
 }
 
 .cards img {
+  width: 100%;
+  max-width: 150px;
+}
+
+.left_img {
   float: left;
+  width:25%;
+  display: inline-block;
   height: 100%;
-  padding-right: 10px;
+  padding-right: 25px;
 }
 
 .more_info {
-  float: left;
+  display: inline-block;
   padding-right: 15%;
+  width: 75%;
 }
 
-
-
-
-
-#content {
-  position:relative;
-  left: 50%;
-  margin-top:-30%;
-  z-index: 999;
+/* http://stackoverflow.com/questions/17354364/how-to-make-an-entire-div-clickable-with-css */
+div.clickable {
+  position: relative;
 }
 
-#clarifi {
-  margin-right: 10px
-}
-
-.p {
-  width: 72%;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-h5 {
-  color: #2B2B2B;
-}
-
-.row {
-  margin-bottom: 0;
-}
-
-#left_content {
-
-  background-color: rgba(226, 106, 106, .8);
-  background-color: #EEFFFF;
-}
-
-#left_content {
-
-  background-color: rgba(226, 106, 106, .8);
-  background-color: #EEFFFF;
+div.clickable a{
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    text-decoration:none; /* Makes sure the link   doesn't get underlined */
+    z-index:10; /* raises anchor tag above everything else in div */
+    background-color:white; /*workaround to make clickable in IE */
+    opacity: 0; /*workaround to make clickable in IE */
+    filter: alpha(opacity=1); /*workaround to make clickable in IE */
 }
