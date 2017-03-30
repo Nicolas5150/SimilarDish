@@ -1,4 +1,5 @@
-$(document).ready(function(){
+$(document).ready(function() {
+
   $('.modal').modal();
 
   $('.slider').slider({
@@ -7,7 +8,6 @@ $(document).ready(function(){
    height:600,
    interval:5000
    });
-
 
   // http://stackoverflow.com/questions/24446281/passing-image-using-ajax-to-php
   $('#upload_img').click(function() {
@@ -46,13 +46,64 @@ $(document).ready(function(){
     // https://developer.clarifai.com/models/bd367be194cf45149e75f01d59f77ba7
     app.models.predict("bd367be194cf45149e75f01d59f77ba7", "https://samples.clarifai.com/food.jpg").then(
       function(response) {
-        console.log(response);
+
+        // Obtain only the json responce ingredients that have a probability value
+        // of .85% or more and add to an array - this will be passed to Spoonacular.
+        var accuratePass = [];
+        var currentItem;
+        var indgredientURL = '';
+        for (var i = 0; i < response.outputs[0].data.concepts.length; i++) {
+          if (response.outputs[0].data.concepts[i].value >= .85) {
+            // Strip any spaces from the passed ingredient name.
+            currentItem = response.outputs[0].data.concepts[i].name;
+            currentItem = currentItem.replace(/\s+/g, '');
+            // append a % for the query string to all ingredients.
+            currentItem += '%';
+            indgredientURL += currentItem;
+          }
+
+          // We've gone to either the end or one past the last possible item to add.
+          // Rempove the last % that was appended, then break the loop.
+          else {
+            indgredientURL = indgredientURL.substring(0, indgredientURL.length - 1);
+            break;
+          }
+        }
+
+        //alert(indgredientURL);
+        indgredientURL = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients='+indgredientURL+'&limitLicense=false&number=5&ranking=1';
+
+        console.log(accuratePass);
+
+        spoonacularResults(indgredientURL);
+
       },
       function(err) {
         alert(error);
       }
     );
   }
+
+  // String together the url query (indgredientURL) that will be passed to php call.
+  // There it will request a call to the API using the passed in query String
+  // Will return the top 10 (if possible) recipes as a Json file.
+  function spoonacularResults(indgredientURL) {
+    $.ajax({
+      type: "POST",
+      url: "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/php/spoonacular.php",
+      data: ({indgredientURL: indgredientURL}),
+      success: function(data) {
+        alert("its " +data);
+
+        // Parse the encoded data from the php call.
+        var relatedMeals = jQuery.parseJSON(data);
+        alert(relatedMeals[0].title);
+        // With the valid data we can now append all the content to the screen.
+
+      }
+    });
+  }
+
 
   $(".clickable").click(function() {
     var name =  $(this).attr("id");

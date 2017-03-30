@@ -32,9 +32,6 @@ h5 {
 
 /* Results Section (card layout) */
 #results {
-  border-top: 1px;
-  border-style: solid;
-  border-color: black;
   height: 300px;
   overflow: scroll;
   width: 100%;
@@ -55,15 +52,19 @@ h5 {
 
 .cards img {
   width: 100%;
+  height: auto;
   max-width: 150px;
+  max-height: 150px;
 }
 
 .left_img {
   float: left;
   width:25%;
+  max-width: 300px;
+  min-width: 250px;
   display: inline-block;
   height: 100%;
-  padding-right: 25px;
+  padding-right: 10px;
 }
 
 .more_info {
