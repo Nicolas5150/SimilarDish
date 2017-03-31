@@ -11,10 +11,6 @@ $response = Unirest\Request::get($indgredientURL,
   )
 );
 
-  //echo $response->raw_body;
-
-  // echo $indgredientURL;
-
   // Return the json file to function spoonacularResults(indgredientURL);
   echo json_encode($response->body, JSON_UNESCAPED_SLASHES);
 

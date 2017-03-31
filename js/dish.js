@@ -44,7 +44,7 @@ $(document).ready(function() {
 
     // Food model.
     // https://developer.clarifai.com/models/bd367be194cf45149e75f01d59f77ba7
-    app.models.predict("bd367be194cf45149e75f01d59f77ba7", "https://samples.clarifai.com/food.jpg").then(
+    app.models.predict("bd367be194cf45149e75f01d59f77ba7", url).then(
       function(response) {
 
         // Obtain only the json responce ingredients that have a probability value
@@ -56,6 +56,7 @@ $(document).ready(function() {
           if (response.outputs[0].data.concepts[i].value >= .85) {
             // Strip any spaces from the passed ingredient name.
             currentItem = response.outputs[0].data.concepts[i].name;
+            $( "#ingredients" ).append( "<span class=\'ingredient\'>"+currentItem+"</span>" );
             currentItem = currentItem.replace(/\s+/g, '');
             // append a % for the query string to all ingredients.
             currentItem += '%';
@@ -70,38 +71,40 @@ $(document).ready(function() {
           }
         }
 
-        //alert(indgredientURL);
+        // Prep for the fucntion call passing in the query string that will
+        // eventually make its way over to the Spoonacular API call.
         indgredientURL = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients='+indgredientURL+'&limitLicense=false&number=5&ranking=1';
-
-        console.log(accuratePass);
-
         spoonacularResults(indgredientURL);
 
       },
+
       function(err) {
         alert(error);
       }
     );
   }
 
+  // https://market.mashape.com/spoonacular/recipe-food-nutrition
   // String together the url query (indgredientURL) that will be passed to php call.
   // There it will request a call to the API using the passed in query String
   // Will return the top 10 (if possible) recipes as a Json file.
   function spoonacularResults(indgredientURL) {
-    $.ajax({
-      type: "POST",
-      url: "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/php/spoonacular.php",
-      data: ({indgredientURL: indgredientURL}),
-      success: function(data) {
-        alert("its " +data);
-
-        // Parse the encoded data from the php call.
-        var relatedMeals = jQuery.parseJSON(data);
-        alert(relatedMeals[0].title);
-        // With the valid data we can now append all the content to the screen.
-
-      }
-    });
+    // Smoths scroll to the results section that will be populated.
+    $('html, body').animate({ scrollTop:$("#results").offset().top}, 500);
+    // $.ajax({
+    //   type: "POST",
+    //   url: "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/php/spoonacular.php",
+    //   data: ({indgredientURL: indgredientURL}),
+    //   success: function(data) {
+    //     alert("its " +data);
+    //
+    //     // Parse the encoded data from the php call.
+    //     var relatedMeals = jQuery.parseJSON(data);
+    //     alert(relatedMeals[0].title);
+    //     // With the valid data we can now append all the content to the screen.
+    //
+    //   }
+    // });
   }
 
 

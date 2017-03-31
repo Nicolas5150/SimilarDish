@@ -4,8 +4,9 @@ html, body {
   width: 100%;
 }
 
-h5 {
+h1, h2, h3, h4, h5, h6 {
   color: #2B2B2B;
+  margin: 0;
 }
 
 /* Bottom Two Subsections */
@@ -24,13 +25,16 @@ h5 {
 }
 
 #left_content {
-
   background-color: rgba(226, 106, 106, .8);
   background-color: #EEFFFF;
 }
 
 
 /* Results Section (card layout) */
+#result_header {
+  background-color: gray;
+}
+
 #results {
   height: 300px;
   overflow: scroll;
@@ -38,12 +42,34 @@ h5 {
   height: 100%;
 }
 
+#ingredients {
+  white-space: nowrap;
+  overflow: scroll;
+  margin-left: 2%;
+  margin-right: 2%;
+
+}
+
+.ingredient {
+  margin-right: 3%;
+  font-size: 18px;
+}
+
 .cards {
-  margin-bottom: 5px;
+  display: inline-block;
+  margin-bottom: 1%;
   background-color: #E26A6A;
-  padding: 10px;
-  width: 100%;
-  height: 20%;
+  width: 49.5%;
+  height: 25%;
+  max-height: 200px;
+  min-height: 150px;
+}
+.cards:nth-child(odd) {
+  float: left;
+}
+
+.cards:nth-child(even) {
+  float: right;
 }
 
 .cards:hover {
@@ -51,26 +77,23 @@ h5 {
 }
 
 .cards img {
-  width: 100%;
-  height: auto;
-  max-width: 150px;
-  max-height: 150px;
+  width: auto;
+  height: 100%;
+  min-width: 180px;
 }
 
 .left_img {
   float: left;
-  width:25%;
-  max-width: 300px;
-  min-width: 250px;
+  width:45%;
   display: inline-block;
   height: 100%;
-  padding-right: 10px;
+  max-width: 250px;
 }
 
-.more_info {
+.card_info {
+  padding-top: 10px;
   display: inline-block;
-  padding-right: 15%;
-  width: 75%;
+  padding-right: 10%;
 }
 
 /* http://stackoverflow.com/questions/17354364/how-to-make-an-entire-div-clickable-with-css */
@@ -89,4 +112,30 @@ div.clickable a{
     background-color:white; /*workaround to make clickable in IE */
     opacity: 0; /*workaround to make clickable in IE */
     filter: alpha(opacity=1); /*workaround to make clickable in IE */
+}
+
+@media (max-width: 1000px) {
+  .cards {
+    width: 100%;
+    height: 5%;
+    font-size: 12px;
+    min-height: 100px;
+  }
+
+  .cards h5{
+    font-size: 20px;
+  }
+
+  .cards img{
+    width: 50%;
+    min-width: 100px;
+  }
+
+  .left_img {
+    width: 25%;
+  }
+
+  .card_info {
+    padding-top: 0px;
+  }
 }
