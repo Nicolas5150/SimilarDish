@@ -23,29 +23,29 @@
       <li>
         <img src="img/food1.jpg">
         <div class="caption center-align">
-          <h3>This is our big Tagline!</h3>
-          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+          <h3>Similar Dish</h3>
+          <h5 class="light grey-text text-lighten-3">Upload an image</h5>
         </div>
       </li>
       <li>
         <img src="img/food2.jpg">
-        <div class="caption left-align">
-          <h3>Left Aligned Caption</h3>
-          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+        <div class="caption right-align">
+          <h3>Similar Dish</h3>
+          <h5 class="light grey-text text-lighten-3">We'll find the ingredients</h5>
         </div>
       </li>
       <li>
         <img src="img/food3.jpg">
-        <div class="caption right-align">
-          <h3>Right Aligned Caption</h3>
-          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+        <div class="caption left-align">
+          <h3>Similar Dish</h3>
+          <h5 class="light grey-text text-lighten-3">We'll find similar meals</h5>
         </div>
       </li>
       <li>
         <img src="img/food4.jpg">
         <div class="caption center-align">
-          <h3>This is our big Tagline!</h3>
-          <h5 class="light grey-text text-lighten-3">Here's our small slogan.</h5>
+          <h3>Similar Dish</h3>
+          <h5 class="light grey-text text-lighten-3">Then present them to you</h5>
         </div>
       </li>
     </ul>
@@ -60,6 +60,7 @@
       <img class="responsive-img" src="img/clarifai.png" id="clarifi">
       <img class="responsive-img" src="img/spoonacular.png">
       <p class="p">
+        <br/>
         Using Clarifi to analyze your uploaded image, we obtain all the possible
         ingredients in the provided sample. <br> Once done, we send it off to Spoonacular.
       </p>
@@ -87,38 +88,13 @@
         <p id="ingredients" class="center"> </p>
       </div>
     </div>
-    <div class="cards clickable" id="ps">
-      <a href="#"> </a>
-      <div class="left_img">
-        <img class="" src="https:\/\/spoonacular.com\/recipeImages\/Super-Easy-Crock-Pot-Spaghetti-Squash-with-Meatballs-565356.jpg">
-      </div>
-      <div class="card_info">
-        <span class="card_title">
-          <h5> Hamburger </h5>
-          <p> Brief description </p>
-        </span>
-      </div>
-    </div>
-
-    <div class="cards clickable" id="ps2">
-      <a href="#"> </a>
-      <div class="left_img">
-        <img class="" src="img/food3.png">
-      </div>
-      <div class="card_info">
-        <span class="card_title">
-          <h5> Hamburger </h5>
-          <p> Brief description </p>
-        </span>
-      </div>
-    </div>
   </div>
 
 
  <!-- Modal Structure -->
  <!-- https://www.youtube.com/watch?v=Ipa9xAs_nTg -->
  <div id="modal1" class="modal modal-fixed-footer">
-   <div class="modal-content">
+   <div class="modal-content center">
      <h4>Upload Image</h4>
      <form id="img_form" method="post" action="#" enctype="multipart/form-data">
        <input type="hidden" name="size" value="100000">

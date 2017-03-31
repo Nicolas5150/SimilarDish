@@ -11,9 +11,12 @@ $(document).ready(function() {
 
   // http://stackoverflow.com/questions/24446281/passing-image-using-ajax-to-php
   $('#upload_img').click(function() {
+    // Prevent a page reload and remove any previous spoonacular results.
     event.preventDefault();
+    $('.clickable').remove();
+
+    // Append files
     var form = new FormData(document.getElementById('img_form'));
-    //append files
     var file = document.getElementById('img_name').files[0];
     if (file) {
       form.append('image', file);
@@ -73,9 +76,8 @@ $(document).ready(function() {
 
         // Prep for the fucntion call passing in the query string that will
         // eventually make its way over to the Spoonacular API call.
-        indgredientURL = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients='+indgredientURL+'&limitLicense=false&number=5&ranking=1';
+        indgredientURL = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients='+indgredientURL+'&limitLicense=false&number=10&ranking=1';
         spoonacularResults(indgredientURL);
-
       },
 
       function(err) {
@@ -91,27 +93,44 @@ $(document).ready(function() {
   function spoonacularResults(indgredientURL) {
     // Smoths scroll to the results section that will be populated.
     $('html, body').animate({ scrollTop:$("#results").offset().top}, 500);
-    // $.ajax({
-    //   type: "POST",
-    //   url: "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/php/spoonacular.php",
-    //   data: ({indgredientURL: indgredientURL}),
-    //   success: function(data) {
-    //     alert("its " +data);
-    //
-    //     // Parse the encoded data from the php call.
-    //     var relatedMeals = jQuery.parseJSON(data);
-    //     alert(relatedMeals[0].title);
-    //     // With the valid data we can now append all the content to the screen.
-    //
-    //   }
-    // });
+    $.ajax({
+      type: "POST",
+      url: "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/php/spoonacular.php",
+      data: ({indgredientURL: indgredientURL}),
+      success: function(data) {
+        alert("its " +data);
+
+        // Parse the encoded data from the php call.
+        var relatedMeals = jQuery.parseJSON(data);
+        alert(relatedMeals[0].title);
+        alert(relatedMeals.length);
+
+        // With the valid data we can now append all the content to the screen.
+        // On each loop add 1 to the id, this will keep track of what to populate
+        // the modal with from the relatedMeals Json later on.
+        for (var i = 0; i < relatedMeals.length; i++) {
+          var item = '<div class=\"cards clickable\" id=\"ps'+i+'\">'+
+            '<a href=\"#\"> </a>'+
+            '<div class=\"left_img\">'+
+              '<img src=\"' +relatedMeals[i].image+ '\"alt=\"food\">'+
+            '</div>'+
+            '<div class=\"card_info\">'+
+                '<p class=\"meal_titles\"><b>'+relatedMeals[i].title+'</b></p>'+
+                '<p> Brief description </p>'+
+            '</div>'+
+          '</div>';
+          $( "#results" ).append(item);
+        }
+
+        // Create all the clickable listeners for all recipes.
+        $(".clickable").click(function() {
+          var name =  $(this).attr("id");
+          window.location = $(this).find("a").attr("href");
+          alert(name);
+        });
+
+      }
+    });
   }
-
-
-  $(".clickable").click(function() {
-    var name =  $(this).attr("id");
-    window.location = $(this).find("a").attr("href");
-    alert(name);
-  });
 
 });
