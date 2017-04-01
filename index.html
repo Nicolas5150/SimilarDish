@@ -104,8 +104,9 @@
      <h4>Upload Image</h4>
      <form id="img_form" method="post" action="#" enctype="multipart/form-data">
        <input type="hidden" name="size" value="100000">
-       <div>
-         <input id="img_name" type="file" name="image">
+       <div id="upload_btn" class="waves-effect waves-green">
+         <span id="photo_upload_text">Click to add photo</span>
+         <input id="img_name" type="file" name="image" class="hide_file">
        </div>
        <div class="modal-footer">
          <input id="upload_img" class="modal-action modal-close waves-effect waves-green btn-flat"

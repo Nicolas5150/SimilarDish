@@ -9,6 +9,14 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
 }
 
+.btn-floating {
+  background-color: #e26a6a;
+}
+
+.btn-floating:hover {
+  background-color: #cb5f5f;
+}
+
 /* Bottom Two Subsections */
 #clarifi {
   margin-right: 10px
@@ -34,13 +42,55 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #left_content {
-  background-color: #F7DEC5;
+
 }
 
 #right_content {
-  background-color: #F7DEC5;
-  border-left: 5px solid white;
+  border-left: 3px solid gray;
 }
+
+.modal {
+  border-radius: 35px;
+}
+
+#upload_btn{
+  margin-top: 50px;
+  width: 100%;
+  border:1px solid black;
+  margin-left: auto;
+  margin-right: auto;
+  color:#fff;
+  border-radius:2px;
+  text-align:center;
+  float:left;
+  cursor:pointer;
+  position: absolute;
+   bottom: 70px;
+   right: 0;
+}
+
+#upload_btn:hover{
+  background-color: #d3d3d3;
+}
+
+#photo_upload_text {
+  position: relative;
+  color: black;
+  font-size: 18px;
+  bottom: -50px;
+}
+
+.hide_file {
+    z-index: 1000;
+    opacity: 0;
+    cursor: pointer;
+    right: 0;
+    top: 0;
+    height: 100%;
+    font-size: 24px;
+    width: 100%;
+}
+
 /* Results Section (card layout) */
 #result_header {
   background-color: #87B79A;
@@ -57,7 +107,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #results::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 #ingredients {
@@ -69,6 +119,10 @@ h1, h2, h3, h4, h5, h6 {
 
 #ingredients::-webkit-scrollbar {
     display: none;
+}
+
+.step_number {
+  padding-right: 10px;
 }
 
 
@@ -100,7 +154,7 @@ input {
 }
 
 .cards:hover {
-  background-color: gray;
+  background-color: #c3dbcc;
 }
 
 .cards img {
@@ -208,12 +262,11 @@ div.clickable a{
   }
 
   #left_content {
-    background-color: #F7DEC5;
+
   }
 
   #right_content {
-    border-top: 2px solid white;
-    background-color: #F7DEC5;
+    border-top: 2px solid gray;
     border-left: 0px solid white;
   }
 }

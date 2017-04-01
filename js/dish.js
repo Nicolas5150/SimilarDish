@@ -75,7 +75,7 @@ $(document).ready(function() {
     // of .85% or more and add to an array - this will be passed to Spoonacular.
     var accuratePass = [];
     var currentItem;
-    var indgredientURL = '';
+    var ingredientURL = '';
     for (var i = 0; i < response.outputs[0].data.concepts.length; i++) {
       if (response.outputs[0].data.concepts[i].value >= .85) {
         // Strip any spaces from the passed ingredient name.
@@ -84,23 +84,23 @@ $(document).ready(function() {
         currentItem = currentItem.replace(/\s+/g, '');
         // append a % for the query string to all ingredients.
         currentItem += '%';
-        indgredientURL += currentItem;
+        ingredientURL += currentItem;
       }
 
       // We've gone to either the end or one past the last possible item to add.
       // Rempove the last % that was appended, then break the loop.
       else {
-        indgredientURL = indgredientURL.substring(0, indgredientURL.length - 1);
+        ingredientURL = ingredientURL.substring(0, ingredientURL.length - 1);
         break;
       }
     }
 
     // Prep for the fucntion call passing in the query string that will
     // eventually make its way over to the Spoonacular API call.
-    indgredientURL =
+    ingredientURL =
       'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com'+
-      '/recipes/findByIngredients?fillIngredients=true&ingredients='+indgredientURL+
-      '&limitLicense=false&number=10&ranking=1';
+      '/recipes/findByIngredients?fillIngredients=true&ingredients='+ingredientURL+
+      '&limitLicense=false&number=20&ranking=1';
 
 
     // Smooth scroll to the results section that will be populated.
@@ -111,7 +111,7 @@ $(document).ready(function() {
     $.ajax({
       type: "POST",
       url: "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/php/spoonacular.php",
-      data: ({indgredientURL: indgredientURL}),
+      data: ({ingredientURL: ingredientURL}),
       success: function(data) {
 
         // Parse the encoded data from the php call.
@@ -124,33 +124,33 @@ $(document).ready(function() {
   function bulkRecipes(relatedMeals) {
     // Create url that contains all the ids from the related meals JSON passed in
     var mealID;
-    var indgredientURL = '';
+    var ingredientURL = '';
     for (var i = 0; i < relatedMeals.length; i++) {
       // append a % for the query string to all ids.
       // also append 2C to the begining of all but first id.
       mealID = relatedMeals[i].id;
       mealID += '%';
       if (i != 0) {
-        indgredientURL += '2C'+ mealID;
+        ingredientURL += '2C'+ mealID;
       }
       else {
-        indgredientURL += mealID;
+        ingredientURL += mealID;
       }
     }
-    indgredientURL = indgredientURL.substring(0, indgredientURL.length - 1);
+    ingredientURL = ingredientURL.substring(0, ingredientURL.length - 1);
 
     // With the relatedMeals, extract their ids to get a bulk (full description)
     // of all the items in that list.
     // Will use later to get the cooking instructions of that clicked meal.
-    indgredientURL =
+    ingredientURL =
     'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com'+
-    '/recipes/informationBulk?ids='+indgredientURL+
+    '/recipes/informationBulk?ids='+ingredientURL+
     '&includeNutrition=false';
-    alert(indgredientURL);
+    alert(ingredientURL);
     $.ajax({
       type: "POST",
       url: "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/php/spoonacular.php",
-      data: ({indgredientURL: indgredientURL}),
+      data: ({ingredientURL: ingredientURL}),
       success: function(data) {
         alert(data);
         // Parse the encoded data from the php call.
@@ -173,11 +173,11 @@ $(document).ready(function() {
           '</div>'+
           '<div class=\"card_info\">'+
               '<p class=\"meal_titles\"><b>'+relatedMeals[i].title+'</b></p>'+
-              '<p class=\"mobile_block\"> Time: </p>'+
-              '<p class=\"mobile_block\"> Serves: </p>'+
+              '<p class=\"mobile_block\"> Time: '+bulkRecipes[i].readyInMinutes+' minutes</p>'+
+              '<p class=\"mobile_block\"> Serves: ' +bulkRecipes[i].servings+'</p>'+
           '</div>'+
         '</div>';
-      $( "#results" ).append(item);
+      $("#results").append(item);
     }
 
     // Listen for a click from the clickable class
@@ -188,6 +188,8 @@ $(document).ready(function() {
       var name =  $(this).attr("id");
       var splitID = name.split('_');
       var arrayPos = splitID[1];
+
+      alert(arrayPos);
 
       // Insert the title and image of the selcted dish.
       var mealModal =
@@ -231,6 +233,20 @@ $(document).ready(function() {
       $("#modal2").append(mealModal);
 
       // Add the food prep instructions.
+      //alert(bulkRecipes[0].analyzedInstructions[0].steps[0].step);
+      // List off all ingredients in the dish.
+      // First loop is for all ingredients that are missing.
+      mealModal =
+        '<div class=\"center ingredients_title\"><b>Steps:</b></div>'+
+        '<div class=\"required_ingredients centered_div\">';
+      if ('steps' in bulkRecipes[arrayPos].analyzedInstructions[0])
+      for (var i = 0; i < bulkRecipes[arrayPos].analyzedInstructions[0].steps.length; i++) {
+        mealModal +=
+          '<div><span class=\"step_number\">'+(i+1)+'</span>' +bulkRecipes[arrayPos].analyzedInstructions[0].steps[i].step+ '</div>';
+      }
+      mealModal +=
+        '</div><br/>';
+      $("#modal2").append(mealModal);
     });
   }
 
