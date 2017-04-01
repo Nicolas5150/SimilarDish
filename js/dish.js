@@ -146,13 +146,12 @@ $(document).ready(function() {
     'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com'+
     '/recipes/informationBulk?ids='+ingredientURL+
     '&includeNutrition=false';
-    alert(ingredientURL);
+
     $.ajax({
       type: "POST",
       url: "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/php/spoonacular.php",
       data: ({ingredientURL: ingredientURL}),
       success: function(data) {
-        alert(data);
         // Parse the encoded data from the php call.
         var bulkRecipes = jQuery.parseJSON(data);
         SimilarDishes(relatedMeals, bulkRecipes);
@@ -188,8 +187,6 @@ $(document).ready(function() {
       var name =  $(this).attr("id");
       var splitID = name.split('_');
       var arrayPos = splitID[1];
-
-      alert(arrayPos);
 
       // Insert the title and image of the selcted dish.
       var mealModal =
@@ -233,7 +230,6 @@ $(document).ready(function() {
       $("#modal2").append(mealModal);
 
       // Add the food prep instructions.
-      //alert(bulkRecipes[0].analyzedInstructions[0].steps[0].step);
       // List off all ingredients in the dish.
       // First loop is for all ingredients that are missing.
       mealModal =
