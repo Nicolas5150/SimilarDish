@@ -58,38 +58,7 @@ $(document).ready(function() {
     // https://developer.clarifai.com/models/bd367be194cf45149e75f01d59f77ba7
     app.models.predict("bd367be194cf45149e75f01d59f77ba7", url).then(
       function(response) {
-
-        // Obtain only the json responce ingredients that have a probability value
-        // of .85% or more and add to an array - this will be passed to Spoonacular.
-        var accuratePass = [];
-        var currentItem;
-        var indgredientURL = '';
-        for (var i = 0; i < response.outputs[0].data.concepts.length; i++) {
-          if (response.outputs[0].data.concepts[i].value >= .85) {
-            // Strip any spaces from the passed ingredient name.
-            currentItem = response.outputs[0].data.concepts[i].name;
-            $( "#ingredients" ).append( "<span class=\'ingredient\'>"+currentItem+"</span>" );
-            currentItem = currentItem.replace(/\s+/g, '');
-            // append a % for the query string to all ingredients.
-            currentItem += '%';
-            indgredientURL += currentItem;
-          }
-
-          // We've gone to either the end or one past the last possible item to add.
-          // Rempove the last % that was appended, then break the loop.
-          else {
-            indgredientURL = indgredientURL.substring(0, indgredientURL.length - 1);
-            break;
-          }
-        }
-
-        // Prep for the fucntion call passing in the query string that will
-        // eventually make its way over to the Spoonacular API call.
-        indgredientURL =
-          'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com'+
-          '/recipes/findByIngredients?fillIngredients=true&ingredients='+indgredientURL+
-          '&limitLicense=false&number=10&ranking=1';
-        spoonacularResults(indgredientURL);
+        spoonacularResults(response);
       },
 
       // Error handling.
@@ -99,13 +68,46 @@ $(document).ready(function() {
     );
   }
 
+  // Spoonacular API integration.
   // https://market.mashape.com/spoonacular/recipe-food-nutrition
-  // String together the url query (indgredientURL) that will be passed to php call.
-  // There it will request a call to the API using the passed in query String
-  // Will return the top 10 (if possible) recipes as a Json file.
-  function spoonacularResults(indgredientURL) {
+  function spoonacularResults(response) {
+    // Obtain only the json responce ingredients that have a probability value
+    // of .85% or more and add to an array - this will be passed to Spoonacular.
+    var accuratePass = [];
+    var currentItem;
+    var indgredientURL = '';
+    for (var i = 0; i < response.outputs[0].data.concepts.length; i++) {
+      if (response.outputs[0].data.concepts[i].value >= .85) {
+        // Strip any spaces from the passed ingredient name.
+        currentItem = response.outputs[0].data.concepts[i].name;
+        $( "#ingredients" ).append( "<span class=\'ingredient\'>"+currentItem+"</span>" );
+        currentItem = currentItem.replace(/\s+/g, '');
+        // append a % for the query string to all ingredients.
+        currentItem += '%';
+        indgredientURL += currentItem;
+      }
+
+      // We've gone to either the end or one past the last possible item to add.
+      // Rempove the last % that was appended, then break the loop.
+      else {
+        indgredientURL = indgredientURL.substring(0, indgredientURL.length - 1);
+        break;
+      }
+    }
+
+    // Prep for the fucntion call passing in the query string that will
+    // eventually make its way over to the Spoonacular API call.
+    indgredientURL =
+      'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com'+
+      '/recipes/findByIngredients?fillIngredients=true&ingredients='+indgredientURL+
+      '&limitLicense=false&number=10&ranking=1';
+
+
     // Smooth scroll to the results section that will be populated.
     $('html, body').animate({ scrollTop:$("#results").offset().top}, 500);
+
+    // Will request a call to the API using the passed in query String and
+    // return the top 10 (if possible) recipes as a Json file.
     $.ajax({
       type: "POST",
       url: "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/php/spoonacular.php",
@@ -114,12 +116,51 @@ $(document).ready(function() {
 
         // Parse the encoded data from the php call.
         var relatedMeals = jQuery.parseJSON(data);
-        SimilarDishes(relatedMeals);
+        bulkRecipes(relatedMeals);
       }
     });
   }
 
-  function SimilarDishes(relatedMeals) {
+  function bulkRecipes(relatedMeals) {
+    // Create url that contains all the ids from the related meals JSON passed in
+    var mealID;
+    var indgredientURL = '';
+    for (var i = 0; i < relatedMeals.length; i++) {
+      // append a % for the query string to all ids.
+      // also append 2C to the begining of all but first id.
+      mealID = relatedMeals[i].id;
+      mealID += '%';
+      if (i != 0) {
+        indgredientURL += '2C'+ mealID;
+      }
+      else {
+        indgredientURL += mealID;
+      }
+    }
+    indgredientURL = indgredientURL.substring(0, indgredientURL.length - 1);
+
+    // With the relatedMeals, extract their ids to get a bulk (full description)
+    // of all the items in that list.
+    // Will use later to get the cooking instructions of that clicked meal.
+    indgredientURL =
+    'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com'+
+    '/recipes/informationBulk?ids='+indgredientURL+
+    '&includeNutrition=false';
+    alert(indgredientURL);
+    $.ajax({
+      type: "POST",
+      url: "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/php/spoonacular.php",
+      data: ({indgredientURL: indgredientURL}),
+      success: function(data) {
+        alert(data);
+        // Parse the encoded data from the php call.
+        var bulkRecipes = jQuery.parseJSON(data);
+        SimilarDishes(relatedMeals, bulkRecipes);
+      }
+    });
+  }
+
+  function SimilarDishes(relatedMeals, bulkRecipes) {
     // With the valid data we can now append all the content to the screen.
     // On each loop add 1 to the id, this will keep track of what to populate
     // the modal with from the relatedMeals Json later on.
@@ -188,6 +229,8 @@ $(document).ready(function() {
       mealModal +=
         '</div><br/><br/>';
       $("#modal2").append(mealModal);
+
+      // Add the food prep instructions.
     });
   }
 
