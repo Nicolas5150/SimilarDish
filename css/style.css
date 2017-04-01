@@ -25,7 +25,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #left_content {
-  background-color: #E99292;
+  background-color: #F7DEC5;
 }
 
 #right_content {
@@ -35,13 +35,19 @@ h1, h2, h3, h4, h5, h6 {
 /* Results Section (card layout) */
 #result_header {
   background-color: #87B79A;
+  display: none;
 }
 
 #results {
+  display: none;
   height: 300px;
   overflow: scroll;
   width: 100%;
-  height: 100%;
+  height: 88%;
+}
+
+#results::-webkit-scrollbar {
+    display: none;
 }
 
 #ingredients {
@@ -49,8 +55,12 @@ h1, h2, h3, h4, h5, h6 {
   overflow: scroll;
   margin-left: 2%;
   margin-right: 2%;
-
 }
+
+#ingredients::-webkit-scrollbar {
+    display: none;
+}
+
 
 input {
   padding-top: 5%;
@@ -126,6 +136,27 @@ div.clickable a{
     opacity: 0; /*workaround to make clickable in IE */
     filter: alpha(opacity=1); /*workaround to make clickable in IE */
 }
+.centered_div {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+.ingredients_title {
+  font-size: 15px;
+}
+
+.center_image {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  height: auto;
+  max-width: 500px;
+}
+
+.required_ingredients {
+  width: 80%;
+}
 
 @media (max-width: 1200px) {
   .cards {
@@ -152,6 +183,12 @@ div.clickable a{
   .card_info {
     padding-top: 0px;
     font-size: 1.6vw;
+  }
+
+  .mobile_block {
+    margin-top: -20px;
+    padding-right: 20px;
+    display: inline-block;
   }
 }
 

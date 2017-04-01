@@ -9,11 +9,17 @@ $(document).ready(function() {
    interval:5000
    });
 
+  // Click listner for when a user hits upload image to which the php function is called.
+  // Here the image will go from the local machine to the php db which will be
+  // eventually sent to the Clarifi API.
   // http://stackoverflow.com/questions/24446281/passing-image-using-ajax-to-php
   $('#upload_img').click(function() {
     // Prevent a page reload and remove any previous spoonacular results.
     event.preventDefault();
+    $('#result_header').show();
+    $('#results').show();
     $('.clickable').remove();
+    $('.ingredient').remove();
 
     // Append files
     var form = new FormData(document.getElementById('img_form'));
@@ -21,6 +27,8 @@ $(document).ready(function() {
     if (file) {
       form.append('image', file);
     }
+
+    // Send over the image to be uploaded to the server for Clarifi to use url.
     $.ajax({
       type: "POST",
       url: "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/php/upload.php",
@@ -29,6 +37,7 @@ $(document).ready(function() {
       contentType: false,
       processData: false,
       success: function(data) {
+
         // Parse together the url for which the image has been uploaded to.
         // This will be given to the clarifi function as a parameter.
         var url = "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/"+data.substring(3);
@@ -76,10 +85,14 @@ $(document).ready(function() {
 
         // Prep for the fucntion call passing in the query string that will
         // eventually make its way over to the Spoonacular API call.
-        indgredientURL = 'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/recipes/findByIngredients?fillIngredients=true&ingredients='+indgredientURL+'&limitLicense=false&number=10&ranking=1';
+        indgredientURL =
+          'https://spoonacular-recipe-food-nutrition-v1.p.mashape.com'+
+          '/recipes/findByIngredients?fillIngredients=true&ingredients='+indgredientURL+
+          '&limitLicense=false&number=10&ranking=1';
         spoonacularResults(indgredientURL);
       },
 
+      // Error handling.
       function(err) {
         alert(error);
       }
@@ -91,45 +104,90 @@ $(document).ready(function() {
   // There it will request a call to the API using the passed in query String
   // Will return the top 10 (if possible) recipes as a Json file.
   function spoonacularResults(indgredientURL) {
-    // Smoths scroll to the results section that will be populated.
+    // Smooth scroll to the results section that will be populated.
     $('html, body').animate({ scrollTop:$("#results").offset().top}, 500);
     $.ajax({
       type: "POST",
       url: "http://sulley.cah.ucf.edu/~ni927795/SimilarDish/php/spoonacular.php",
       data: ({indgredientURL: indgredientURL}),
       success: function(data) {
-        alert("its " +data);
 
         // Parse the encoded data from the php call.
         var relatedMeals = jQuery.parseJSON(data);
-        alert(relatedMeals[0].title);
-        alert(relatedMeals.length);
-
-        // With the valid data we can now append all the content to the screen.
-        // On each loop add 1 to the id, this will keep track of what to populate
-        // the modal with from the relatedMeals Json later on.
-        for (var i = 0; i < relatedMeals.length; i++) {
-          var item = '<div class=\"cards clickable\" id=\"ps'+i+'\">'+
-            '<a href=\"#\"> </a>'+
-            '<div class=\"left_img\">'+
-              '<img src=\"' +relatedMeals[i].image+ '\"alt=\"food\">'+
-            '</div>'+
-            '<div class=\"card_info\">'+
-                '<p class=\"meal_titles\"><b>'+relatedMeals[i].title+'</b></p>'+
-                '<p> Brief description </p>'+
-            '</div>'+
-          '</div>';
-          $( "#results" ).append(item);
-        }
-
-        // Create all the clickable listeners for all recipes.
-        $(".clickable").click(function() {
-          var name =  $(this).attr("id");
-          window.location = $(this).find("a").attr("href");
-          alert(name);
-        });
-
+        SimilarDishes(relatedMeals);
       }
+    });
+  }
+
+  function SimilarDishes(relatedMeals) {
+    // With the valid data we can now append all the content to the screen.
+    // On each loop add 1 to the id, this will keep track of what to populate
+    // the modal with from the relatedMeals Json later on.
+    for (var i = 0; i < relatedMeals.length; i++) {
+      var item =
+        '<div class=\"cards clickable\" id=\"click_'+i+'\">'+
+          '<a href=\"#modal2\"> </a>'+
+          '<div class=\"left_img\">'+
+            '<img src=\"' +relatedMeals[i].image+ '\"alt=\"food\">'+
+          '</div>'+
+          '<div class=\"card_info\">'+
+              '<p class=\"meal_titles\"><b>'+relatedMeals[i].title+'</b></p>'+
+              '<p class=\"mobile_block\"> Time: </p>'+
+              '<p class=\"mobile_block\"> Serves: </p>'+
+          '</div>'+
+        '</div>';
+      $( "#results" ).append(item);
+    }
+
+    // Listen for a click from the clickable class
+    $(".clickable").click(function() {
+
+      // Get id of clicked anchor
+      // which corresponds to the index pos in the Spoonacular JSON.
+      var name =  $(this).attr("id");
+      var splitID = name.split('_');
+      var arrayPos = splitID[1];
+
+      // Insert the title and image of the selcted dish.
+      var mealModal =
+        '<div class="modal-content container">'+
+          '<h4 class=\"center\">'+relatedMeals[arrayPos].title+'</h4>'+
+          '<div class=\"centered_div\">'+
+          '<img class=\"center_image\" src=\"' +relatedMeals[arrayPos].image+ '\"alt=\"food\">'+
+        '</div>';
+
+      // Clear any previous data in the modal and then replace with the new.
+      $('#modal2').empty();
+      $("#modal2").append(mealModal);
+
+      // List off all ingredients in the dish.
+      // First loop is for all ingredients that are missing.
+      mealModal =
+        '<div class=\"center ingredients_title\"><b>Ingredients:</b></div>'+
+        '<div class=\"required_ingredients centered_div\">'+
+        '<div>Needed -</div>';
+      for (var i = 0; i < relatedMeals[arrayPos].missedIngredients.length; i++) {
+        mealModal +=
+          '<div>' +relatedMeals[arrayPos].missedIngredients[i].originalString+ '</div>';
+      }
+      mealModal +=
+        '</div><br/>';
+      $("#modal2").append(mealModal);
+
+      // Second loop is for all ingredients that were in image.
+      mealModal =
+        '<div class=\"required_ingredients centered_div\">'+
+        '<div>Similar -</div>';
+      for (var i = 0; i < relatedMeals[arrayPos].usedIngredients.length; i++) {
+        mealModal +=
+          '<div>' +relatedMeals[arrayPos].usedIngredients[i].amount+
+            ' ' +relatedMeals[arrayPos].usedIngredients[i].unitLong+
+            ' of ' +relatedMeals[arrayPos].usedIngredients[i].name+
+          '</div>';
+      }
+      mealModal +=
+        '</div><br/><br/>';
+      $("#modal2").append(mealModal);
     });
   }
 
